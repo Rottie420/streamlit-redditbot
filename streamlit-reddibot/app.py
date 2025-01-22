@@ -4,20 +4,28 @@ import time
 import json
 import streamlit as st
 from datetime import datetime
-
+from config import CLIENT_ID, CLIENT_SECRET, USER_AGENT, USERNAME, PASSWORD
 # Set up Streamlit app
 def main():
     st.set_page_config(page_title="Reddit Dashboard", layout="wide")
-    st.title("RedditBot Messenger")
+    st.title("PRAW-8 spammer v1")
 
     # Sidebar for input fields
-    st.sidebar.header("PRAW 8")
-    REDDIT_CLIENT_ID = st.sidebar.text_input("Reddit Client ID", "1KL_hSNbWufl0EMinUtKHA")
-    REDDIT_CLIENT_SECRET = st.sidebar.text_input("Reddit Client Secret", "OASdkwgl0woW8smJe9qkxUXq8Qy-cg", type="password")
-    REDDIT_USER_AGENT = st.sidebar.text_input("User Agent", "auto comment post")
-    REDDIT_USERNAME = st.sidebar.text_input("Reddit Username", "420_rottie")
-    REDDIT_PASSWORD = st.sidebar.text_input("Reddit Password", "kalbo0014#", type="password")
+    st.sidebar.header("USER CREDENTIALS")
+    REDDIT_CLIENT_ID = st.sidebar.text_input("Reddit Client ID", CLIENT_ID)
+    REDDIT_CLIENT_SECRET = st.sidebar.text_input("Reddit Client Secret", CLIENT_SECRET, type="password")
+    REDDIT_USER_AGENT = st.sidebar.text_input("User Agent", USER_AGENT)
+    REDDIT_USERNAME = st.sidebar.text_input("Reddit Username", USERNAME)
+    REDDIT_PASSWORD = st.sidebar.text_input("Reddit Password", PASSWORD, type="password")
     file_path = st.sidebar.text_input("File Path for Usernames", "users.json")
+
+    # Navigation Menu using Radio Buttons in Horizontal Layout
+    menu = st.radio(
+        "Select an Action:",
+        ["🏠 Home", "✉️ Inbox", "📝 r/usernames"],
+        horizontal=True,
+    )
+    st.experimental_set_query_params(menu=menu)
 
     # Main layout
     container = st.container()  # Using container for both col1 and col2
@@ -57,14 +65,7 @@ def main():
                 container.error(f"{self.time_now()} Failed to send message to {username}: {e}")  # Changed to container.write
 
         def target_subreddit(self):
-            subreddits = ['cats', 'dogs', 'pets', 'Animals', 'aww', 'PetPics', 'petcare', 'dogs_getting_dogs',
-                        'GuiltyDogs', 'CatsWithDogs', 'CryptidDogs', 'dogpictures', 'BackpackingDogs', 
-                        'WhatsWrongWithYourDog', 'DogsMirin', 'IllegallySmolDogs', 'Dogtraining', 'dogswithjobs',
-                        'WatchDogsWoofInside', 'reactivedogs', 'SupermodelDogs', 'AnimalsBeingDerps', 'DOG', 'BadDogs',
-                        'DogAdvice', 'DogsShopping', 'TotallyNotDogs', 'DogsLoversCommunity', 'service_dogs', 'pitbulls',
-                        'RunningWithDogs', 'DogsAreFuckingStupid', 'rescuedogs', 'CatsAndDogsBFF', 'BoxerDogs',
-                        'PatientDogs', 'DogsWhoYell', 'CatsWhoYell', 'FunnyDogVideos', 'germanshepherds', 'lookatmydog',
-                        'TheDogsPaw', 'DogsEnjoyingPets', 'IDmydog', 'DogsOnHardwoodFloors', 'dogsonroofs', 'Dachshund']
+            subreddits = ['vet', 'AskVet', 'VetTech', 'ApoioVet', 'AskVetAnimals', 'Petsuppliesplus']
 
             return random.choice(subreddits)
 
@@ -140,15 +141,37 @@ def main():
                 except Exception as e:
                     container.error(f"{self.time_now()} An error occurred: {e}")  # Changed to container.write
 
-    # Button to start scanning and messaging
-    if st.sidebar.button("Start Bot"):
-        scanner = RedditUserScanner(file_path)
-        scanner.scan_and_send_messages()
+    def log_unread_messages():
+        try:
+            unread_messages = reddit.inbox.unread(limit=None)
+            if unread_messages:
+                for msg in unread_messages:
+                    st.write(f"**Author:** {msg.author.name if msg.author else 'Unknown'}")
+                    st.write(f"**Subject:** {msg.subject}")
+                    st.write(f"**Body:** {msg.body}")
+                    st.write("---")
+            else:
+                st.write("No unread messages.")
+        except Exception as e:
+            st.error(f"Error fetching messages: {e}")
 
-    # Collapsible logs for usernames and status
-    with st.expander("Loaded Usernames"):
+    def load_usernames():
         scanner = RedditUserScanner(file_path)
         st.write(scanner.usernames_list)
+
+    # Routing based on menu selection
+    if menu == "✉️ Inbox":
+        st.write("Unread Mail")
+        log_unread_messages()
+
+    elif menu == "📝 r/usernames":
+        st.write("Username List")
+        load_usernames()
+
+    else:
+        if st.sidebar.button("Start Bot"):
+            scanner = RedditUserScanner(file_path)
+            scanner.scan_and_send_messages()
 
 if __name__ == "__main__":
     main()
