@@ -1,0 +1,5 @@
+CLIENT_ID = "_8NC3vyUvvEVbuBroXxJKA"
+CLIENT_SECRET = "PmrJcfMyJg9W2XTe5Edt1BrgrMOndg"
+USER_AGENT = "auto comment post"
+USERNAME = "420_rottie"
+PASSWORD = "tulog0014#"

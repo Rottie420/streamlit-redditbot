@@ -18,11 +18,12 @@ def main():
     REDDIT_USERNAME = st.sidebar.text_input("Reddit Username", USERNAME)
     REDDIT_PASSWORD = st.sidebar.text_input("Reddit Password", PASSWORD, type="password")
     file_path = st.sidebar.text_input("File Path for Usernames", "users.json")
+    file_path_subs = st.sidebar.text_input("File Path for Subbreddits", "subbredits-dogs.json")
 
     # Navigation Menu using Radio Buttons in Horizontal Layout
     menu = st.radio(
         "Select an Action:",
-        ["🏠 Home", "✉️ Inbox", "📝 r/usernames"],
+        ["🏠 Home", "✉️ Inbox", "💬 Response", "📝 r/usernames"],
         horizontal=True,
     )
     st.experimental_set_query_params(menu=menu)
@@ -43,6 +44,7 @@ def main():
     class RedditUserScanner:
         def __init__(self, file_path):
             self.file_path = file_path
+            self.file_path_subs = file_path_subs
             self.usernames_list = self.load_usernames()
 
         def load_usernames(self):
@@ -65,48 +67,64 @@ def main():
                 container.error(f"{self.time_now()} Failed to send message to {username}: {e}")  # Changed to container.write
 
         def target_subreddit(self):
-            subreddits = ['vet', 'AskVet', 'VetTech', 'ApoioVet', 'AskVetAnimals', 'Petsuppliesplus']
-
-            return random.choice(subreddits)
+            with open(self.file_path_subs, 'r') as file:
+                    subreddits = json.load(file)
+                    return random.choice(subreddits)
 
         def random_messages(self, username):
             message = [(
-               f"Hi {username},\n\n"
-                "I noticed you're a fellow pet lover, so I wanted to share something "
-                "I’ve been working on that might interest you: an NFC Pet Tag. "
-                "It’s designed to help reunite lost pets with their owners by securely "
-                "storing details like:\n\n"
-                "    - Your contact details\n"
-                "    - Your pet’s medical history\n"
-                "    - Their last known location\n\n"
-                "Here’s a quick [demo](https://connecta.store/demo) to show you how it works." 
-                "Feel free to ask me any "
-                "questions or share your thoughts—I’d genuinely love to hear what you think.\n\n"
-                "If it sounds like something you’d find helpful, you can check it out [here](https://connecta.store)."
+                f"Hi {username},\n\n"
+                "I hope you're doing well! I’m reaching out to share something exciting "
+                "that I believe can really simplify pet parenting for you.\n\n"
+                "Everything About Your Pet in One Tap\n"
+                "Introducing NFC Pet Tags—a smart way to track, organize, and manage everything "
+                "about your pet, all in one place.\n\n"
+                "    What’s included?\n"
+                "    - Pet profile\n"
+                "    - Medical history\n"
+                "    - Last known location\n"
+                "    - Vet Appoinment\n"
+                "    - Ai pet assistant\n\n"
+                "I’m excited to invite you to be one of the first to try this innovation and help "
+                "us make it even better.\n\n"
+                "If you’re ready, check out our demo to see how it works.\n\n"
+                "Thank you for your time and support!\n\n"
             ),
             (
-                f"Hey {username},\n\n"
-                "As a fellow pet lover, I wanted to share something cool I’ve been working on—"
-                "an NFC Pet Tag! It’s a handy little tag designed to help reunite lost pets "
-                "with their owners by storing important details like:\n\n"
-                "    - Your contact details\n"
-                "    - Your pet’s medical history\n"
-                "    - Their last known location\n\n"
-                "Here’s a [demo](https://connecta.store/demo) to show you how it works. "
-                "I’d love to hear your thoughts or answer any questions you have.\n\n"
-                "If you think it’d be useful, you can check it out [here](https://connecta.store)!"
+                f"Hi {username},\n\n"
+                "I hope this message finds you well! I wanted to introduce you to something exciting "
+                "that can make pet parenting simpler and more organized.\n\n"
+                "Everything About Your Pet in One Tap\n"
+                "Introducing NFC Pet Tags—a smart way to track, manage, and access all the information "
+                "about your pet in a single, easy-to-use system.\n\n"
+                "    What’s included?\n"
+                "    - Pet profile\n"
+                "    - Medical history\n"
+                "    - Last known location\n"
+                "    - Vet Appoinment\n"
+                "    - Ai pet assistant\n\n"
+                "I’d love for you to be one of the first to experience this groundbreaking solution and help "
+                "us improve it further.\n\n"
+                "If you’re ready, check out our demo to see how it works.\n\n"
+                "Thanks for your time and support!\n\n"
             ),
             (
-                f"Hello {username},\n\n"
-                "I hope this message finds you well. As a pet owner, you might find this "
-                "useful: an NFC Pet Tag that I’ve been working on. It’s designed to help reunite "
-                "lost pets with their owners by securely storing information such as:\n\n"
-                "    - Your contact details\n"
-                "    - Your pet’s medical history\n"
-                "    - Their last known location\n\n"
-                "You can view a quick [demo](https://connecta.store/demo) to learn more. "
-                "If you have any questions or feedback, I’d be delighted to hear from you.\n\n"
-                "Feel free to check it out [here](https://connecta.store) if you’re interested."
+                f"Hi {username},\n\n"
+                "I hope you’re doing great! I’m reaching out because I believe this new product could "
+                "make pet parenting a lot easier for you.\n\n"
+                "Everything About Your Pet in One Tap\n"
+                "With NFC Pet Tags, you can effortlessly keep track of all your pet’s important details—"
+                "from health to safety—in one place.\n\n"
+                "What’s included?\n"
+                "    - Pet profile\n"
+                "    - Medical history\n"
+                "    - Last known location\n"
+                "    - Vet Appoinment\n"
+                "    - Ai pet assistant\n\n"
+                "I’m excited to offer you a chance to be one of the first to try this product and share your "
+                "thoughts with us.\n\n"
+                "If you’re ready, check out our demo to see how it works.\n\n"
+                "Thank you for considering this innovation for your pet!\n\n"
             )]
 
             return random.choice(message)
@@ -116,9 +134,9 @@ def main():
 
         def random_subjects(self):
             subject = [
-                        "A Smart Way to Keep Your Pet Safe: NFC Pet Tag",
-                        "For Pet Lovers: Meet the NFC Tag That Protects Your Furry Friend",
-                        "Lost Pet? Here’s How This Tag Can Help You Reunite Quickly!"
+                        "Everything Your Pet Needs in One Tap",
+                        "Simplify Pet Parenting",
+                        "Track, Organize, and Manage Your Pet"
                     ]
             
             return random.choice(subject)
@@ -155,6 +173,47 @@ def main():
         except Exception as e:
             st.error(f"Error fetching messages: {e}")
 
+    def log_unread_messages_to_json():
+        try:
+            unread_messages = reddit.inbox.unread(limit=None)
+            output = []
+
+            if unread_messages:
+                for msg in unread_messages:
+                    message_data = {
+                        "author": msg.author.name if msg.author else 'Unknown',
+                        "subject": msg.subject,
+                        "body": msg.body
+                    }
+                    output.append(message_data)
+
+                    # Mark the message as read
+                    msg.mark_read()
+            else:
+                output.append({"message": "No unread messages."})
+
+            # Read existing data from the JSON file
+            try:
+                with open('unread_messages.json', 'r') as json_file:
+                    existing_data = json.load(json_file)
+            except FileNotFoundError:
+                existing_data = []
+
+            # Append new data to the existing data
+            existing_data.extend(output)
+
+            # Save the updated result back to the JSON file
+            with open('unread_messages.json', 'w') as json_file:
+                json.dump(existing_data, json_file, indent=4)
+
+            # Return the result to be displayed with st.write
+            return existing_data
+
+        except Exception as e:
+            st.error(f"Error fetching messages: {e}")
+            return []
+
+
     def load_usernames():
         scanner = RedditUserScanner(file_path)
         st.write(scanner.usernames_list)
@@ -164,6 +223,9 @@ def main():
         st.write("Unread Mail")
         log_unread_messages()
 
+    if menu == "💬 Response":
+        st.write(log_unread_messages_to_json())
+        
     elif menu == "📝 r/usernames":
         st.write("Username List")
         load_usernames()
