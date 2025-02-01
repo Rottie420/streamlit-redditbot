@@ -57,23 +57,40 @@ class PromptHandler:
         product_data = {
             "product": {
                 "name": "NFC Pet Tag",
-                "description": "A smart and durable NFC-enabled tag designed to Simplify pet parenting. Track, organize, and manage all in one place..",
+                "description": (
+                    "A smart and durable NFC-enabled tag designed to simplify pet parenting. "
+                    "Track, organize, and manage all in one place."
+                ),
                 "features": {
-                    "smart_identification": "Each tag is embedded with an NFC chip that links to your pet's unique profile.",
-                    "passive_tracking" : "When someone interacts with the tag, it will store the last known location"
+                    "smart_identification": (
+                        "Each tag is embedded with an NFC chip that links to your pet's unique profile."
+                    ),
+                    "passive_tracking": (
+                        "When someone interacts with the tag, it will store the last known location."
+                    ),
                 },
                 "benefits": {
-                    "easy_recovery": "Lost pets can be quickly reunited with their owners when someone scans the tag with a smartphone.",
-                    "no_batteries_needed": "Operates without requiring batteries, ensuring consistent functionality.",
-                    "secure_data": "Store essential pet details such as medical history, owner contact, and care instructions securely.",
-                    "set_vet_clinic_appointment": "Easily schedule vet clinic appointments through the platform."
+                    "easy_recovery": (
+                        "Lost pets can be quickly reunited with their owners when someone scans the tag "
+                        "with a smartphone."
+                    ),
+                    "no_batteries_needed": (
+                        "Operates without requiring batteries, ensuring consistent functionality."
+                    ),
+                    "secure_data": (
+                        "Store essential pet details such as medical history, owner contact, "
+                        "and care instructions securely."
+                    ),
+                    "set_vet_clinic_appointment": (
+                        "Easily schedule vet clinic appointments through the platform."
+                    ),
                 },
-                "price": 12.99,
+                "price": 8.69,
                 "currency": "USD",
                 "category": "Pet Accessories",
                 "availability": "In Stock",
                 "shop": "https://connecta.store",
-                "demo": "https://connecta.store/demo"
+                "demo": "https://connecta.store/demo",
             }
         }
 
@@ -89,6 +106,7 @@ class PromptHandler:
                     f"   - User Input: 'How can this product help my business?'\n"
                     f"   - Incorrect: 'How can this product help my business?'\n"
                     f"   - Correct: 'This product helps streamline your workflow, saving time and improving profitability.'\n"
+                    f"   - Ensure the first phrase provides value and directly addresses the user's needs."
                     f"2. DO NOT include a subject line or introductory phrases like 'Okay, here's a persuasive and professional DM crafted based on the provided information and guidelines.'\n"
                     f"3. Keep the message short, engaging, and solution-oriented, focusing on how the product/service can address the user’s needs.\n"
                     f"4. Maintain a confident, friendly, and professional tone throughout.\n"
