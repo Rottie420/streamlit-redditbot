@@ -85,6 +85,9 @@ class PromptHandler:
                         "Easily schedule vet clinic appointments through the platform."
                     ),
                 },
+                "manufactured_from": "Singapore",
+                "shipped_from" : "Singapore",
+                "company_from" : "Singapore",
                 "price": 8.69,
                 "currency": "USD",
                 "category": "Pet Accessories",
