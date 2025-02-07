@@ -83,17 +83,25 @@ def main():
 
         def random_messages(self, username):
             subreddit = self._target_subreddit
-            message = [(
-                            f"Hi u/{username},\n\n"
-                            f"I noticed you’re active in r/{subreddit}, and I thought you might be interested in something I’m working on."
+            message = [
+                        (
+                            f"Hey u/{username},\n\n"
+                            f"I noticed you're active in r/{subreddit}, and I thought you might find this interesting.\n"
+                            f"I've been working on Pet accessories, and I think it could be super helpful for people in our community.\n\n"
+                            f"Let me know if you'd like to know more! Happy to chat 😊"
                         ),
                         (
-                            f"Hi u/{username},\n\n"
-                            f"Since you’re active in r/{subreddit}, I thought you’d appreciate what I’ve been working on."
+                            f"Hey u/{username},\n\n"
+                            f"I saw you’re active in r/{subreddit}, and thought you might be interested in something I’ve been working on.\n" 
+                            f"It’s a Pet accessories, and I think it could really help to all pet owners.\n\n"
+                            f"If you’re curious, feel free to reach out! I’d love to chat more about it."
                         ),
                         (
-                            f"Hi u/{username},\n\n"
-                            f"Hey, I saw you're active in r/{subreddit} and thought you’d find this project I’m working on interesting."
+                            f"Hey u/{username},\n\n"
+                            f"I noticed you’re active in r/{subreddit}, and I think you might find this Pet accessories useful.\n"
+                            f"I’ve been working on something that could help with Pet owners,\n"
+                            f"and thought it could be a good fit for folks in this community.\n\n"
+                            f"If you're interested or want to chat, feel free to reach out! Happy to share more details."
                         )
                     ]
 
@@ -105,10 +113,11 @@ def main():
         def random_subjects(self):
             subreddit = self._target_subreddit
             subject = [
-                        f"Noticed You in r/{subreddit} and Wanted to Share Something.",
-                        f"Saw you in r/{subreddit} and thought I’d share this with you.",
-                        f"Spotted you in r/{subreddit} and wanted to show you something.",
-                        f"I noticed your interest in r/{subreddit} and felt this was something useful for you."
+                        "I apologize if I’m reaching out unexpectedly.",
+                        "I hope I’m not overstepping by messaging you.",
+                        "I appreciate your time and hope this message is okay.",
+                        "I apologize if this message is an intrusion.",
+                        "I hope this DM is alright, I just wanted to share something"
                     ]
             
             return random.choice(subject)

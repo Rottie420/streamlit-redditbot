@@ -94,6 +94,7 @@ class PromptHandler:
                 "availability": "In Stock",
                 "shop": "https://connecta.store",
                 "demo": "https://connecta.store/demo",
+                "about_company": "A soloprenuer that handles everything from product design to coding and marketing."
             }
         }
 
