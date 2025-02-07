@@ -66,8 +66,15 @@ def main():
             try:
                 reddit.redditor(username).message(subject, message_body)
                 container.success(f"{self.time_now()} Message sent to {username}")  # Changed to container.write
+                self.usernames_list.append(username)
+                self.save_usernames()
             except Exception as e:
-                container.error(f"{self.time_now()} Failed to send message to {username}: {e}")  # Changed to container.write
+                if 'RATELIMIT' in str(e):
+                    # Parsing the rate limit message and extracting the duration
+                    container.error(f"{self.time_now()} An error occurred: {e}")  # Changed to container.write
+                    time.sleep(70)
+                else:
+                    container.error(f"{self.time_now()} Failed to send message to {username}: {e}")  # Changed to container.write
 
         def target_subreddit(self):
             with open(self.file_path_subs, 'r') as file:
@@ -87,10 +94,6 @@ def main():
                         (
                             f"Hi u/{username},\n\n"
                             f"Hey, I saw you're active in r/{subreddit} and thought you’d find this project I’m working on interesting."
-                        ),
-                        (   
-                            f"Hi u/{username},\n\n"
-                            f"Your activity in r/{subreddit} caught my eye, and I think you’ll really enjoy this!"
                         )
                     ]
 
@@ -102,10 +105,10 @@ def main():
         def random_subjects(self):
             subreddit = self._target_subreddit
             subject = [
-                        f"Noticed You in r/{subreddit} and Wanted to Share Something!",
-                        f"Saw you in r/{subreddit} and thought I’d share this with you!",
-                        f"Spotted you in r/{subreddit} and wanted to show you something cool!",
-                        f"I noticed your interest in r/{subreddit} and felt this was something you’d enjoy!"
+                        f"Noticed You in r/{subreddit} and Wanted to Share Something.",
+                        f"Saw you in r/{subreddit} and thought I’d share this with you.",
+                        f"Spotted you in r/{subreddit} and wanted to show you something.",
+                        f"I noticed your interest in r/{subreddit} and felt this was something useful for you."
                     ]
             
             return random.choice(subject)
@@ -120,12 +123,10 @@ def main():
                         if isinstance(comment, praw.models.Comment) and comment.author:
                             username = comment.author.name
                             if username not in self.usernames_list:
-                                self.usernames_list.append(username)
-                                
                                 self.send_reddit_message(username, self.random_subjects(), self.random_messages(username))
-                                self.save_usernames()
-                                time.sleep(33)
-            except Exception as e:
+                                time.sleep(18)
+
+            except Exception as e:           
                 container.error(f"{self.time_now()} An error occurred: {e}")  # Changed to container.write
 
     def log_unread_messages():
@@ -149,21 +150,24 @@ def main():
             output = []
             _timenow = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
-            if unread_messages:
+            if unread_messages:    
                 for msg in unread_messages:
-                    prompt = _prompt.handle_prompt(msg.author.name, msg.body)
-                    msg.reply(prompt)
-                    message_data = {
-                        "author": msg.author.name if msg.author else 'Unknown',
-                        "subject": msg.subject,
-                        "body": msg.body,
-                        "response" : prompt
-                    }
+                    if msg.author is not None:  
+                        prompt = _prompt.handle_prompt(msg.author.name, msg.body)
+                        msg.reply(prompt)
+                        message_data = {
+                            "author": msg.author.name if msg.author else 'Unknown',
+                            "subject": msg.subject,
+                            "body": msg.body,
+                            "response" : prompt
+                        }
 
-                    output.append(message_data)
+                        output.append(message_data)
 
-                    # Mark the message as read
-                    msg.mark_read()
+                        # Mark the message as read
+                        msg.mark_read()
+                    else: 
+                        pass
             else:
                 output.append({"message": "No unread messages."})
 
@@ -185,8 +189,12 @@ def main():
             return existing_data
 
         except Exception as e:
-            st.error(f"Error fetching messages: {e}")
-            return []
+            if 'RATELIMIT' in str(e):
+                    st.error(f"Respond failed: {e}")
+                    time.sleep(70)
+            else:
+                st.error(f"Error fetching messages: {e}")
+                return []
 
 
     def load_usernames():
