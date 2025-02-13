@@ -163,20 +163,25 @@ def main():
                 for msg in unread_messages:
                     if msg.author is not None:  
                         prompt = _prompt.handle_prompt(msg.author.name, msg.body)
-                        msg.reply(prompt)
-                        message_data = {
-                            "author": msg.author.name if msg.author else 'Unknown',
-                            "subject": msg.subject,
-                            "body": msg.body,
-                            "response" : prompt
-                        }
+                        try :
+                            msg.reply(prompt)
+                            message_data = {
+                                "author": msg.author.name if msg.author else 'Unknown',
+                                "subject": msg.subject,
+                                "body": msg.body,
+                                "response" : prompt
+                            }
 
-                        output.append(message_data)
+                            output.append(message_data)
 
-                        # Mark the message as read
-                        msg.mark_read()
-                    else: 
-                        pass
+                            # Mark the message as read
+                            msg.mark_read()
+                        except Exception as e:
+                            if 'RATELIMIT' in str(e):
+                                    st.error(f"Respond failed: {e}")
+                                    time.sleep(70)
+                                    continue
+
             else:
                 output.append({"message": "No unread messages."})
 
@@ -198,12 +203,8 @@ def main():
             return existing_data
 
         except Exception as e:
-            if 'RATELIMIT' in str(e):
-                    st.error(f"Respond failed: {e}")
-                    time.sleep(70)
-            else:
-                st.error(f"Error fetching messages: {e}")
-                return []
+            st.error(f"Error fetching messages: {e}")
+            return []
 
 
     def load_usernames():
