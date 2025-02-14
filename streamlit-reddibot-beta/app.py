@@ -11,7 +11,12 @@ from PromptHandler import PromptHandler
 # Set up Streamlit app
 def main():
     st.set_page_config(page_title="Reddit Dashboard", layout="wide")
-    st.title("PRAW-8 spammer v1")
+    col1, col2 = st.columns([1, 12])  # Adjust ratio as needed
+    with col1:
+        st.image("logo.png", width=70)
+
+    with col2:
+        st.title("Reddit Ai Lead-Generator")
 
     # Sidebar for input fields
     st.sidebar.header("USER CREDENTIALS")
