@@ -31,7 +31,7 @@ def main():
     # Navigation Menu using Radio Buttons in Horizontal Layout
     menu = st.radio(
         "Select an Action:",
-        ["▶️ Run", "✉️ Inbox", "💬 Response", "📝 r/usernames"],
+        ["▶️ Run", "✉️ Inbox", "💬 Response", "📝 r/usernames", "⚙️ Settings"],
         horizontal=True,
     )
     st.experimental_set_query_params(menu=menu)
@@ -224,9 +224,13 @@ def main():
     if menu == "💬 Response":
         st.write(log_unread_messages_to_json())
         
-    elif menu == "📝 r/usernames":
+    if menu == "📝 r/usernames":
         st.write("Username List")
         load_usernames()
+
+    if menu == "⚙️ Settings":
+        text = st.text_area("Enter your text here:", height=200)
+        st.write("You entered:", text)
 
     else:
         if st.sidebar.button("▶️ Run Bot"):
