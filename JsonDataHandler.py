@@ -1,45 +1,3 @@
-"""
-    >>>PARSE LIST AND REMOVE DUPLICATES<<<
-
-    sample data structure:
-
-    [['dogs', 'cats', 'pets'],
-    ['pets', 'monkey', 'rat'],
-    ['cow', 'monkey', 'rat', 'pig'],
-    ['cow', 'monkey', 'rat', 'pig']]
-
-    nested_list = JsonDataHandler.read_data('animals')
-    combined_list = list(set(item for sublist in nested_list for item in sublist))
-    print(combined_list)
-
-    output : ['pets', 'monkey', 'rat', 'pig', 'cats', 'cow', 'dogs']
-
-    =======================================================================================
-
-    >>>PARSE MESSAGES USING USERNAME<<<
-
-    sample data structure:
-
-    {
-        "source": "training_data",
-        "data": {
-            "test420": {
-                "timestamp": "27-02-2025 12:06:25",
-                "input": "hallooo",
-                "output": "Hello.\n"
-            }
-        }
-    }
-
-    data = JsonDataHandler.read_data('training_data')
-    username = 'test420'
-    mesages = [item[username] for item in data if username in item]
-    
-    output : [{'timestamp': '27-02-2025 12:06:25', 'input': 'hallooo','output': 'Hello.\n'}]
-
-    =======================================================================================
-"""
-
 import json
 import os
 import logging
@@ -84,6 +42,7 @@ class JsonDataHandler:
                         if json_data.get("source") == source:
                             new_data = json_data.get("data", [])
                             if source == list:
+                                new_data = list(set((item for sublist in new_data for item in sublist)))
                                 data.update(new_data)  # Add all unique items from new_data
                             else:
                                 data.append(new_data)
@@ -93,3 +52,13 @@ class JsonDataHandler:
             logging.error(f"File not found: {e}")
         
         return list(data) if source == list else data
+
+    def read_data_by_set(self, source):
+        nested_list = self.read_data(source)
+        combined_list = list(set(item for item in nested_list))
+        return combined_list
+
+    def read_data_by_filter(self, source, filter_by):
+        data = self.read_data(source)
+        return [item[filter_by] for item in data if filter_by in item]
+    
